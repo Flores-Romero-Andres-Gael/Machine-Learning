@@ -172,4 +172,34 @@ public class Ecuaciones {
         return MultMatrizXTX;
     }
 
+    public static double[][] generatePolynomialMatrix(ArrayList<DatosVariables> datos, int degree) {
+        int n = datos.size();
+        double[][] matrix = new double[degree + 1][degree + 2];
+        
+        for (int i = 0; i <= degree; i++) {
+            for (int j = 0; j <= degree; j++) {
+                matrix[i][j] = 0;
+                for (DatosVariables p : datos) {
+                    matrix[i][j] += Math.pow(p.x, i + j);
+                }
+            }
+            matrix[i][degree + 1] = 0;
+            for (DatosVariables p : datos) {
+                matrix[i][degree + 1] += Math.pow(p.x, i) * p.y;
+            }
+        }
+        return matrix;
+    }
+
+    public static double[] solvePolynomialCoefficients(ArrayList<DatosVariables> datos, int degree) {
+        double[][] matrix = generatePolynomialMatrix(datos, degree);
+        double[][] reducedMatrix = GussJordan(matrix);
+    
+        double[] coefficients = new double[degree + 1];
+        for (int i = 0; i <= degree; i++) {
+            coefficients[i] = reducedMatrix[i][degree + 1];
+        }
+        return coefficients;
+    }
+
 }
